@@ -25,15 +25,17 @@
             background-color: var(--background-color);
             color: var(--text-color);
             line-height: 1.6;
+            position: relative;
         }
 
         header {
-            background-color: white;
+            background-color: rgba(255, 255, 255, 0.95);
             padding: 1rem;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             position: sticky;
             top: 0;
             z-index: 100;
+            backdrop-filter: blur(10px);
         }
 
         .header-content {
@@ -66,8 +68,8 @@
             cursor: pointer;
             font-weight: 500;
             transition: all 0.3s ease;
-            transform: scale(1); /* Added */
-            transition: all 0.3s ease; /* Added */
+            transform: scale(1);
+            transition: all 0.3s ease;
         }
 
         .login-btn {
@@ -84,18 +86,21 @@
             max-width: 1200px;
             margin: 2rem auto;
             padding: 0 1rem;
+            position: relative;
+            z-index: 1;
         }
 
         .search-container {
-            background-color: white;
+            background-color: rgba(255, 255, 255, 0.95);
             border-radius: 16px;
             padding: 2rem;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             max-width: 600px;
             margin: 0 auto;
             animation: slideUp 0.5s ease-out;
-            position: relative; /* Added */
-            overflow: hidden; /* Added */
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
         }
 
         .search-container::before {
@@ -188,18 +193,18 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
             margin-top: 1rem;
-            transform: translateY(0); /* Added */
-            transition: transform 0.3s ease; /* Added */
+            transform: translateY(0);
+            transition: transform 0.3s ease;
         }
 
         .search-btn:hover {
-            transform: translateY(-2px); /* Added */
-            box-shadow: 0 4px 12px rgba(255, 56, 92, 0.3); /* Added */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 56, 92, 0.3);
         }
 
         .nav-buttons button:hover {
-            transform: scale(1.05); /* Added */
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Added */
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .popular-rentals {
@@ -219,12 +224,13 @@
         }
 
         .car-card {
-            background-color: white;
+            background-color: rgba(255, 255, 255, 0.95);
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             transition: transform 0.3s ease;
             animation: fadeIn 0.5s ease-out;
+            backdrop-filter: blur(10px);
         }
 
         .car-card:hover {
@@ -235,11 +241,11 @@
             width: 100%;
             height: 200px;
             object-fit: cover;
-            transition: all 0.5s ease; /* Added */
+            transition: all 0.5s ease;
         }
 
         .car-card:hover img {
-            transform: scale(1.1); /* Added */
+            transform: scale(1.1);
         }
 
         .car-details {
@@ -313,9 +319,10 @@
         .benefits-section {
             margin-top: 4rem;
             padding: 2rem;
-            background-color: white;
+            background-color: rgba(255, 255, 255, 0.95);
             border-radius: 16px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
         }
 
         .benefits-grid {
@@ -348,10 +355,11 @@
         }
 
         .faq-item {
-            background-color: white;
+            background-color: rgba(255, 255, 255, 0.95);
             border-radius: 12px;
             margin-bottom: 1rem;
             overflow: hidden;
+            backdrop-filter: blur(10px);
         }
 
         .faq-question {
@@ -423,9 +431,67 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        .background-slider {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            filter: blur(8px);
+            transform: scale(1.1);
+            transition: opacity 1s ease-in-out, transform 1.5s ease-in-out;
+            animation: slideShow 15s infinite;
+        }
+
+        .slide:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .slide:nth-child(2) {
+            animation-delay: 5s;
+        }
+
+        .slide:nth-child(3) {
+            animation-delay: 10s;
+        }
+
+        @keyframes slideShow {
+            0%, 95%, 100% {
+                opacity: 0;
+                transform: scale(1.1);
+            }
+            20%, 75% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+        }
+
+        .background-slider.fade-out {
+            opacity: 0;
+            transition: opacity 0.5s ease-out;
+        }
     </style>
 </head>
 <body>
+    <div class="background-slider">
+        <div class="slide" style="background-image: url('tesla.jpg')"></div>
+        <div class="slide" style="background-image: url('BMWX5.jpg')"></div>
+        <div class="slide" style="background-image: url('TOYOTA.jpeg')"></div>
+    </div>
     <header>
         <div class="header-content">
             <div class="logo">Rent<span>-ar</span></div>
@@ -646,6 +712,40 @@
                 item.classList.toggle('active');
             });
         });
+
+        // Add scroll-based background fade
+        const backgroundSlider = document.querySelector('.background-slider');
+        let lastScrollPosition = 0;
+        const fadeStartPoint = window.innerHeight * 0.7; // Start fading when user has scrolled 70% of viewport height
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > fadeStartPoint) {
+                const opacity = Math.max(0, 1 - (currentScroll - fadeStartPoint) / 300);
+                backgroundSlider.style.opacity = opacity;
+            } else {
+                backgroundSlider.style.opacity = 1;
+            }
+            
+            lastScrollPosition = currentScroll;
+        });
+
+        // Optional: Pause animations when out of viewport
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const slides = entry.target.querySelectorAll('.slide');
+                slides.forEach(slide => {
+                    if (entry.isIntersecting) {
+                        slide.style.animationPlayState = 'running';
+                    } else {
+                        slide.style.animationPlayState = 'paused';
+                    }
+                });
+            });
+        }, { threshold: 0 });
+
+        observer.observe(backgroundSlider);
     </script>
 </body>
 </html>
